@@ -58,8 +58,10 @@
 - (IBAction)dotPressed
 {
         // checking if there are no dots already on display
-    if (self.userIsInTheMiddleOfEnteringANumber && [self.display.text rangeOfString:@"."].location == NSNotFound) {
-        self.display.text = [self.display.text stringByAppendingString:@"."];
+    if (self.userIsInTheMiddleOfEnteringANumber) {
+        if ([self.display.text rangeOfString:@"."].location == NSNotFound) {
+            self.display.text = [self.display.text stringByAppendingString:@"."];
+        }
     } else {
         self.display.text = @"0.";
         self.userIsInTheMiddleOfEnteringANumber = YES;
