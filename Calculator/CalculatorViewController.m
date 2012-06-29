@@ -19,6 +19,7 @@
 @implementation CalculatorViewController
 
 @synthesize display = _display;
+@synthesize history = _history;
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
 @synthesize brain = _brain;
 
@@ -39,9 +40,19 @@
     }
 }
 
+- (void)addHistoryItem:(NSString *)anItem
+{
+    if ([self.history.text isEqualToString:@""]) {
+        self.history.text = anItem;
+    } else {
+        self.history.text = [self.history.text stringByAppendingFormat:@" %@", anItem];
+    }
+}
+
 - (IBAction)enterPressed
 {
     [self.brain pushOperand:[self.display.text doubleValue]];
+    [self addHistoryItem:self.display.text];
     self.userIsInTheMiddleOfEnteringANumber = NO;
 }
 
@@ -52,6 +63,7 @@
     }
     NSString *operation = sender.currentTitle;
     double result = [self.brain performOperation:operation];
+    [self addHistoryItem:operation];
     self.display.text = [NSString stringWithFormat:@"%g", result];
 }
 
@@ -68,4 +80,8 @@
     }
 }
 
+- (void)viewDidUnload {
+    [self setHistory:nil];
+    [super viewDidUnload];
+}
 @end
