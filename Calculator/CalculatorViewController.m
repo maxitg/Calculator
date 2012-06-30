@@ -36,7 +36,7 @@
         self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
         self.display.text = digit;
-        self.userIsInTheMiddleOfEnteringANumber = YES;
+        if (![digit isEqualToString:@"0"]) self.userIsInTheMiddleOfEnteringANumber = YES;
     }
 }
 
