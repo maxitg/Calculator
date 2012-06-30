@@ -80,8 +80,11 @@
     }
 }
 
-- (void)viewDidUnload {
-    [self setHistory:nil];
-    [super viewDidUnload];
+- (IBAction)CPressed {
+    [self.brain clear];
+    self.display.text = @"0";
+    self.history.text = @"";
+    self.userIsInTheMiddleOfEnteringANumber = NO;
 }
+
 @end
