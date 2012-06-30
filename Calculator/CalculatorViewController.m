@@ -40,11 +40,22 @@
     }
 }
 
+- (void)addEqualsToHistory
+{
+    self.history.text = [self.history.text stringByAppendingString:@" ="];
+}
+
+- (void)removeEqualsFromHistory
+{
+    if ([self.history.text characterAtIndex:(self.history.text.length-1)] == '=') self.history.text = [self.history.text substringToIndex:(self.history.text.length-2)];
+}
+
 - (void)addHistoryItem:(NSString *)anItem
 {
     if ([self.history.text isEqualToString:@""]) {
         self.history.text = anItem;
     } else {
+        [self removeEqualsFromHistory];
         self.history.text = [self.history.text stringByAppendingFormat:@" %@", anItem];
     }
 }
@@ -65,6 +76,7 @@
     double result = [self.brain performOperation:operation];
     [self addHistoryItem:operation];
     self.display.text = [NSString stringWithFormat:@"%g", result];
+    [self addEqualsToHistory];
 }
 
 - (IBAction)dotPressed
@@ -96,6 +108,7 @@
         }
     } else {
         self.display.text = @"0";
+        [self removeEqualsFromHistory];
     }
 }
 
