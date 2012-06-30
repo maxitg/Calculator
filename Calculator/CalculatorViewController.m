@@ -79,6 +79,14 @@
     [self addEqualsToHistory];
 }
 
+- (IBAction)plusMinusPressed:(UIButton *)sender {
+    if (self.userIsInTheMiddleOfEnteringANumber) {
+        self.display.text = [NSString stringWithFormat:@"%g", -self.display.text.doubleValue];
+    } else {
+        [self operationPressed:sender];
+    }
+}
+
 - (IBAction)dotPressed
 {
         // checking if there are no dots already on display

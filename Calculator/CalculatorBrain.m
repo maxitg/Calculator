@@ -63,6 +63,8 @@
         if (operand >= 0) result = sqrt(operand);
     } else if ([operation isEqualToString:@"π"]) {
         result = M_PI;
+    } else if ([operation isEqualToString:@"+ / -"]) {
+        result = -[self popOperand];
     }
     
     [self pushOperand:result];
