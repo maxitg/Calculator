@@ -77,4 +77,9 @@
     [self.operandStack removeAllObjects];
 }
 
+- (NSString*) description
+{
+    return [NSString stringWithFormat:@"stack = %@", self.operandStack];
+}
+
 @end
