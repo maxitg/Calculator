@@ -110,7 +110,7 @@
 - (IBAction)backspacePressed {
     if (self.userIsInTheMiddleOfEnteringANumber) {
         self.display.text = [self.display.text substringToIndex:(self.display.text.length-1)];
-        if ([self.display.text isEqualToString:@""]) {
+        if ([self.display.text isEqualToString:@""] || [self.display.text isEqualToString:@"-"]) {
             self.display.text = @"0";
             self.userIsInTheMiddleOfEnteringANumber = NO;
         }
