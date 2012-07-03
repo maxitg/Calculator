@@ -76,6 +76,7 @@
     double result = [self.brain performOperation:operation];
     [self addHistoryItem:operation];
     self.display.text = [NSString stringWithFormat:@"%g", result];
+    if ([self.display.text isEqualToString:@"-0"]) self.display.text = @"0"; 
     [self addEqualsToHistory];
 }
 
