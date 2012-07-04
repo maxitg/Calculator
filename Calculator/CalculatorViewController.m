@@ -45,9 +45,9 @@
     self.history.text = [self.history.text stringByAppendingString:@" ="];
 }
 
-- (void)removeEqualsFromHistory
+- (void)removeEqualsFromHistoryIfAny
 {
-    if ([self.history.text characterAtIndex:(self.history.text.length-1)] == '=') self.history.text = [self.history.text substringToIndex:(self.history.text.length-2)];
+    if ([self.history.text characterAtIndex:([self.history.text length]-1)] == '=') self.history.text = [self.history.text substringToIndex:([self.history.text length]-2)];
 }
 
 - (void)addHistoryItem:(NSString *)anItem
@@ -55,7 +55,7 @@
     if ([self.history.text isEqualToString:@""]) {
         self.history.text = anItem;
     } else {
-        [self removeEqualsFromHistory];
+        [self removeEqualsFromHistoryIfAny];
         self.history.text = [self.history.text stringByAppendingFormat:@" %@", anItem];
     }
 }
@@ -110,14 +110,14 @@
 
 - (IBAction)backspacePressed {
     if (self.userIsInTheMiddleOfEnteringANumber) {
-        self.display.text = [self.display.text substringToIndex:(self.display.text.length-1)];
+        self.display.text = [self.display.text substringToIndex:([self.display.text length]-1)];
         if ([self.display.text isEqualToString:@""] || [self.display.text isEqualToString:@"-"]) {
             self.display.text = @"0";
             self.userIsInTheMiddleOfEnteringANumber = NO;
         }
     } else {
         self.display.text = @"0";
-        [self removeEqualsFromHistory];
+        [self removeEqualsFromHistoryIfAny];
     }
 }
 
