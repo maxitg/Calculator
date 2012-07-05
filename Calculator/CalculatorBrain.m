@@ -38,8 +38,7 @@
 
 - (void)pushOperand:(double)operand
 {
-    NSNumber *operandObject = [NSNumber numberWithDouble:operand];
-    [self.programStack addObject:operandObject];
+    [self.programStack addObject:[NSNumber numberWithDouble:operand]];
 }
 
 - (double)performOperation:(NSString *)operation
@@ -47,8 +46,15 @@
     [self.programStack addObject:operation];
     return [[self class] runProgram:self.program];
 }
- 
-+ (double)popOperandOffProgramStack:(NSMutableArray*) stack
+
++ (BOOL)isOperation:(NSString *) aString
+{
+    NSSet* operations = [NSSet setWithObjects:@"+", @"*", @"-", @"/", @"sin", @"cos", @"sqrt", @"π", @"+ / -", nil];
+    if ([operations containsObject:aString]) return YES;
+    else return NO;
+}
+
++ (double)popOperandOffProgramStack:(NSMutableArray *) stack
 {
     double result = 0;
     
@@ -97,9 +103,20 @@
 
 + (double)runProgram:(id)program
 {
+    return [self runProgram:program usingVariableValues:nil];
+}
+
++ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
+{
     NSMutableArray *stack;
     if ([program isKindOfClass:[NSArray class]]) {
         stack = [program mutableCopy];
+        for (int i = 0; i < [stack count]; i++) if ([[stack objectAtIndex:i] isKindOfClass:[NSString class]]) {
+            NSNumber* currentVariableValue = [variableValues valueForKey:[stack objectAtIndex:i]];
+            if (![self isOperation:[stack objectAtIndex:i]] && [currentVariableValue isKindOfClass:[NSNumber class]]) {
+                [stack replaceObjectAtIndex:i withObject:currentVariableValue];
+            }
+        }
     }
     return [self popOperandOffProgramStack:stack];
 }
