@@ -106,19 +106,43 @@
     return [self runProgram:program usingVariableValues:nil];
 }
 
++ (NSIndexSet *)variableIndexesInProgram:(id)program
+{
+    BOOL (^isVariable)(id obj, NSUInteger idx, BOOL *stop);
+    
+    isVariable = ^ (id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:[NSString class]] && ![self isOperation:obj]) return YES;
+        else return NO;
+    };
+    
+    return [program indexesOfObjectsPassingTest:isVariable];
+}
+
 + (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
 {
     NSMutableArray *stack;
     if ([program isKindOfClass:[NSArray class]]) {
         stack = [program mutableCopy];
-        for (int i = 0; i < [stack count]; i++) if ([[stack objectAtIndex:i] isKindOfClass:[NSString class]]) {
-            NSNumber* currentVariableValue = [variableValues valueForKey:[stack objectAtIndex:i]];
-            if (![self isOperation:[stack objectAtIndex:i]] && [currentVariableValue isKindOfClass:[NSNumber class]]) {
-                [stack replaceObjectAtIndex:i withObject:currentVariableValue];
+        
+        //  Replacing variable names with its values
+        
+        void (^replaceVariable)(NSUInteger idx, BOOL *stop);
+        
+        replaceVariable = ^ (NSUInteger idx, BOOL *stop) {
+            id variableValue = [variableValues objectForKey:[program objectAtIndex:idx]];
+            if ([variableValue isKindOfClass:[NSNumber class]]) {   //  Maybe variableValue is NSString and isOperation
+                [stack replaceObjectAtIndex:idx withObject:[variableValues objectForKey:[program objectAtIndex:idx]]];
             }
-        }
+        };
+        
+        [[self variableIndexesInProgram:program] enumerateIndexesUsingBlock:replaceVariable];
     }
     return [self popOperandOffProgramStack:stack];
+}
+
++ (NSSet *)variablesUsedInProgram:(id)program
+{
+    return [NSSet setWithArray:[program objectsAtIndexes:[self variableIndexesInProgram:program]]];
 }
 
 - (void)clear
