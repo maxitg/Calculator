@@ -98,7 +98,7 @@
     if (topOfStack) [stack removeLastObject];
     
     if ([topOfStack isKindOfClass:[NSNumber class]]) {
-        return [topOfStack stringValue];
+        return [NSString stringWithFormat:@"%g", [topOfStack doubleValue]];
     } else if ([topOfStack isKindOfClass:[NSString class]]) {
         
         if ([topOfStack isEqualToString:@"+ / -"]) {    //  it is a spectial case
