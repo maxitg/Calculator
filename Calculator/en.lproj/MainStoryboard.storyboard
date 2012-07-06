@@ -379,7 +379,7 @@
                     </view>
                     <connections>
                         <outlet property="display" destination="aUm-fC-bAL" id="gik-FU-ahc"/>
-                        <outlet property="history" destination="OVJ-U8-qgU" id="SZ2-sH-y9t"/>
+                        <outlet property="programDisplay" destination="OVJ-U8-qgU" id="5as-K1-NXg"/>
                     </connections>
                 </viewController>
             </objects>

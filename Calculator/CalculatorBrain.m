@@ -158,10 +158,15 @@
     
     NSString *description = [self descriptionOfTopOfStack:stack];
     while ([stack count] != 0) {
-        description = [description stringByAppendingFormat:@", %@", [self descriptionOfTopOfStack:stack]];
+        description = [[self descriptionOfTopOfStack:stack] stringByAppendingFormat:@", %@", description];  //  the elements appear in the description in the other order, then in the assignemnt. This is by design. This order is much more user friendly.
     }
     
     return description;
+}
+
+- (NSString*)currentProgramDescription
+{
+    return [[self class] descriptionOfProgram:self.program];
 }
 
 - (void)pushOperand:(double)operand

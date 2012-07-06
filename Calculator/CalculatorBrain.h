@@ -14,6 +14,8 @@
 - (double)performOperation:(NSString *)operation;
 - (void)clear;
 
+- (NSString*)currentProgramDescription;
+
 @property (nonatomic, readonly) id program;
 
 + (NSString*)descriptionOfProgram:(id)program;

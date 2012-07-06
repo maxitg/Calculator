@@ -19,7 +19,7 @@
 @implementation CalculatorViewController
 
 @synthesize display = _display;
-@synthesize history = _history;
+@synthesize programDisplay = _history;
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
 @synthesize brain = _brain;
 
@@ -37,34 +37,15 @@
     } else {
         self.display.text = digit;
         if (![digit isEqualToString:@"0"]) self.userIsInTheMiddleOfEnteringANumber = YES;
-    }
-}
-
-- (void)addEqualsToHistory
-{
-    self.history.text = [self.history.text stringByAppendingString:@" ="];
-}
-
-- (void)removeEqualsFromHistoryIfAny
-{
-    if ([self.history.text characterAtIndex:([self.history.text length]-1)] == '=') self.history.text = [self.history.text substringToIndex:([self.history.text length]-2)];
-}
-
-- (void)addHistoryItem:(NSString *)anItem
-{
-    if ([self.history.text isEqualToString:@""]) {
-        self.history.text = anItem;
-    } else {
-        [self removeEqualsFromHistoryIfAny];
-        self.history.text = [self.history.text stringByAppendingFormat:@" %@", anItem];
+        self.programDisplay.text = [self.brain currentProgramDescription];
     }
 }
 
 - (IBAction)enterPressed
 {
     [self.brain pushOperand:[self.display.text doubleValue]];
-    [self addHistoryItem:self.display.text];
     self.userIsInTheMiddleOfEnteringANumber = NO;
+    self.programDisplay.text = [NSString stringWithFormat:@"%@ =", [self.brain currentProgramDescription]];
 }
 
 - (IBAction)operationPressed:(UIButton *)sender
@@ -74,10 +55,9 @@
     }
     NSString *operation = sender.currentTitle;
     double result = [self.brain performOperation:operation];
-    [self addHistoryItem:operation];
+    self.programDisplay.text = [NSString stringWithFormat:@"%@ =", [self.brain currentProgramDescription]];
     self.display.text = [NSString stringWithFormat:@"%g", result];
     if ([self.display.text isEqualToString:@"-0"]) self.display.text = @"0"; 
-    [self addEqualsToHistory];
 }
 
 - (IBAction)plusMinusPressed:(UIButton *)sender {
@@ -98,13 +78,14 @@
     } else {
         self.display.text = @"0.";
         self.userIsInTheMiddleOfEnteringANumber = YES;
+        self.programDisplay.text = [self.brain currentProgramDescription];
     }
 }
 
 - (IBAction)CPressed {
     [self.brain clear];
     self.display.text = @"0";
-    self.history.text = @"";
+    self.programDisplay.text = @"";
     self.userIsInTheMiddleOfEnteringANumber = NO;
 }
 
@@ -117,7 +98,7 @@
         }
     } else {
         self.display.text = @"0";
-        [self removeEqualsFromHistoryIfAny];
+        self.programDisplay.text = [self.brain currentProgramDescription];
     }
 }
 
