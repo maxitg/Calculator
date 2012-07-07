@@ -18,79 +18,44 @@
 
 @synthesize programStack = _programStack;
 
-- (NSMutableArray *)programStack
-{
-    if (!_programStack) {
-        _programStack = [[NSMutableArray alloc] init];
-    }
-    return _programStack;
-}
+    //  Operations helping methods
 
-- (id)program
++ (BOOL)isOperation:(id) anObject
 {
-    return [self.programStack copy];
-}
-
-+ (BOOL)isOperation:(NSString *) aString
-{
-    if ([[self arrayOfOperations] containsObject:aString]) return YES;
+    NSSet *operations = [NSSet setWithObjects:@"+", @"*", @"-", @"/", @"sin", @"cos", @"sqrt", @"π", @"+ / -", nil];
+    if ([operations containsObject:anObject]) return YES;
     else return NO;
 }
 
-+ (NSArray *)arrayOfOperations
++ (int)numberOfObjectOperands:(id) anObject
 {
-    return [NSArray arrayWithObjects:@"+", @"*", @"-", @"/", @"sin", @"cos", @"sqrt", @"π", @"+ / -", nil];
+    NSSet *operationsWith2Operands = [NSSet setWithObjects:@"+", @"*", @"-", @"/", nil];
+    NSSet *operationsWith1Operand = [NSSet setWithObjects:@"sin", @"cos", @"sqrt", @"+ / -", nil];
+    
+    if ([operationsWith2Operands containsObject:anObject]) return 2;
+    else if ([operationsWith1Operand containsObject:anObject]) return 1;
+    else return 0;
 }
 
-+ (int)numberOfOperationOperands:(NSString *) anOperation
++ (int)objectPrecedence:(id) anObject
 {
-    if (![self isOperation:anOperation]) return 0;
-    NSArray* operations = [self arrayOfOperations];
-    NSArray* numbersOfOperands = [NSArray arrayWithObjects:
-                                  [NSNumber numberWithInt:2],   //  +
-                                  [NSNumber numberWithInt:2],   //  *
-                                  [NSNumber numberWithInt:2],   //  -
-                                  [NSNumber numberWithInt:2],   //  /
-                                  [NSNumber numberWithInt:1],   //  sin
-                                  [NSNumber numberWithInt:1],   //  cos
-                                  [NSNumber numberWithInt:1],   //  sqrt
-                                  [NSNumber numberWithInt:0],   //  π
-                                  [NSNumber numberWithInt:1],   //  + / -
-                                  nil];
-    return [[[NSDictionary dictionaryWithObjects:numbersOfOperands forKeys:operations] valueForKey:anOperation] intValue];
-}
-
-    //  Lower precedence means this operation should be evaluated first
-
-+ (int)objectPrecedence:(NSString *) anOperation
-{
-    if ([anOperation isKindOfClass:[NSNumber class]]) {
-        if ([anOperation doubleValue] < 0) return 3;
-        else return 0;
-    } else if ([self isOperation:anOperation]) {
-        NSArray* operations = [self arrayOfOperations];
-        NSArray* precedences = [NSArray arrayWithObjects:
-                                [NSNumber numberWithInt:2], //  +
-                                [NSNumber numberWithInt:1], //  *
-                                [NSNumber numberWithInt:2], //  -
-                                [NSNumber numberWithInt:1], //  /
-                                [NSNumber numberWithInt:0], //  sin
-                                [NSNumber numberWithInt:0], //  cos
-                                [NSNumber numberWithInt:0], //  sqrt
-                                [NSNumber numberWithInt:0], //  π
-                                [NSNumber numberWithInt:3]  //  + / -
-                                , nil];
-        return [[[NSDictionary dictionaryWithObjects:precedences forKeys:operations] valueForKey:anOperation] intValue];
-    } else {
-        return 0;
-    }
+    NSSet *operationsWithPrecedence3 = [NSSet setWithObjects:@"+ / -", nil];
+    NSSet *operationsWithPrecedence2 = [NSSet setWithObjects:@"+", @"-", nil];
+    NSSet *operationsWithPrecedence1 = [NSSet setWithObjects:@"*", @"/", nil];
+    
+    if ([operationsWithPrecedence3 containsObject:anObject]) return 3;
+    else if ([operationsWithPrecedence2 containsObject:anObject]) return 2;
+    else if ([operationsWithPrecedence1 containsObject:anObject]) return 1;
+    else return 0;
 }
 
 + (int)operationIsCommutative:(NSString *) anOperation
 {
-    NSSet* commutativeOperations = [NSSet setWithObjects:@"+", @"*", nil];
+    NSSet *commutativeOperations = [NSSet setWithObjects:@"+", @"*", nil];
     return [commutativeOperations containsObject:anOperation];
 }
+
+    //  Program description methods
 
 + (NSString*)descriptionOfTopOfStack:(NSMutableArray*) stack
 {
@@ -111,13 +76,13 @@
             return [NSString stringWithFormat:@"-%@", operand];
         }
         
-        else if ([self numberOfOperationOperands:topOfStack] == 0) {
+        else if ([self numberOfObjectOperands:topOfStack] == 0) {
             return topOfStack;
             
-        } else if ([self numberOfOperationOperands:topOfStack] == 1) {
+        } else if ([self numberOfObjectOperands:topOfStack] == 1) {
             return [NSString stringWithFormat:@"%@(%@)", topOfStack, [self descriptionOfTopOfStack:stack]];
 
-        } else if ([self numberOfOperationOperands:topOfStack] == 2) {
+        } else if ([self numberOfObjectOperands:topOfStack] == 2) {
             int secondOperandPrecedence = [self objectPrecedence:[stack lastObject]];
             NSString* secondOperand = [self descriptionOfTopOfStack:stack];
             int firstOperandPrecedence = [self objectPrecedence:[stack lastObject]];
@@ -151,47 +116,20 @@
 }
 
 + (NSString*)descriptionOfProgram:(id)program
-{
-    if ([program count] == 0) return nil;
+{    
     NSMutableArray* stack;
     if ([program isKindOfClass:[NSArray class]]) stack = [program mutableCopy];
     
-    NSString *description = [self descriptionOfTopOfStack:stack];
+    NSMutableArray *descriptionComponents = [[NSMutableArray alloc] init];
     while ([stack count] != 0) {
-        description = [[self descriptionOfTopOfStack:stack] stringByAppendingFormat:@", %@", description];  //  the elements appear in the description in the other order, then in the assignemnt. This is by design. This order is much more user friendly.
+        [descriptionComponents addObject:[self descriptionOfTopOfStack:stack]];
     }
     
-    return description;
+    if ([descriptionComponents count]) return [descriptionComponents componentsJoinedByString:@", "];
+    else return nil;
 }
 
-- (NSString*)currentProgramDescription
-{
-    return [[self class] descriptionOfProgram:self.program];
-}
-
-- (void)pushOperand:(double)operand
-{
-    [self.programStack addObject:[NSNumber numberWithDouble:operand]];
-    NSLog(@"%@", [[self class] descriptionOfProgram:self.program]);
-}
-
-- (void)pushVariable:(NSString *)variable
-{
-    [self.programStack addObject:variable];
-    NSLog(@"%@", [[self class] descriptionOfProgram:self.program]);
-}
-
-- (double)performOperation:(NSString *)operation usingVariableValues:(NSDictionary *)variableValues
-{
-    [self.programStack addObject:operation];
-    NSLog(@"%@", [[self class] descriptionOfProgram:self.program]);
-    return [[self class] runProgram:self.program usingVariableValues:variableValues];
-}
-
-- (double)performOperation:(NSString *)operation
-{
-    return [self performOperation:operation usingVariableValues:nil];
-}
+    //  Program evaluation
 
 + (double)popOperandOffProgramStack:(NSMutableArray *) stack
 {
@@ -238,21 +176,12 @@
     return 0;
 }
 
-+ (double)runProgram:(id)program
-{
-    return [self runProgram:program usingVariableValues:nil];
-}
+    //  Variable evaluation methods
 
-+ (NSIndexSet *)variableIndexesInProgram:(id)program
++ (BOOL)isVariable:(id)anObject
 {
-    BOOL (^isVariable)(id obj, NSUInteger idx, BOOL *stop);
-    
-    isVariable = ^ (id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isKindOfClass:[NSString class]] && ![self isOperation:obj]) return YES;
-        else return NO;
-    };
-    
-    return [program indexesOfObjectsPassingTest:isVariable];
+    if ([anObject isKindOfClass:[NSString class]] && ![self isOperation:anObject]) return YES;
+    else return NO;
 }
 
 + (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
@@ -260,37 +189,63 @@
     NSMutableArray *stack;
     if ([program isKindOfClass:[NSArray class]]) {
         stack = [program mutableCopy];
-        
-        //  Replacing variable names with its values
-        
-        void (^replaceVariable)(NSUInteger idx, BOOL *stop);
-        
-        replaceVariable = ^ (NSUInteger idx, BOOL *stop) {
-            id variableValue = [variableValues objectForKey:[program objectAtIndex:idx]];
-            if ([variableValue isKindOfClass:[NSNumber class]]) {   //  Maybe variableValue is NSString and isOperation
-                [stack replaceObjectAtIndex:idx withObject:[variableValues objectForKey:[program objectAtIndex:idx]]];
-            }
-        };
-        
-        [[self variableIndexesInProgram:program] enumerateIndexesUsingBlock:replaceVariable];
+        for (int i = 0; i < [stack count]; i++) if ([self isVariable:[stack objectAtIndex:i]]) {
+            [stack replaceObjectAtIndex:i withObject:[variableValues objectForKey:[stack objectAtIndex:i]] ?: [[NSNull alloc] init]];
+        }
     }
     return [self popOperandOffProgramStack:stack];
 }
 
 + (NSSet *)variablesUsedInProgram:(id)program
 {
-    return [NSSet setWithArray:[program objectsAtIndexes:[self variableIndexesInProgram:program]]];
+    NSMutableSet* result = [[NSMutableSet alloc] init];
+    if ([program isKindOfClass:[NSArray class]]) {
+        for (int i = 0; i < [program count]; i++) if ([self isVariable:[program objectAtIndex:i]]) {
+            [result addObject:[program objectAtIndex:i]];
+        }
+    }
+    return [result copy];
+}
+
+    //  Instance methods
+
+- (NSMutableArray *)programStack
+{
+    if (!_programStack) {
+        _programStack = [[NSMutableArray alloc] init];
+    }
+    return _programStack;
+}
+
+- (id)program
+{
+    return [self.programStack copy];
+}
+
+- (void)pushOperand:(double)operand
+{
+    [self.programStack addObject:[NSNumber numberWithDouble:operand]];
+}
+
+- (void)pushVariable:(NSString *)variable
+{
+    [self.programStack addObject:variable];
+}
+
+- (void)pushOperation:(NSString *)operation
+{
+    [self.programStack addObject:operation];
 }
 
 - (void)clear
 {
-    [self.programStack removeAllObjects];
-    NSLog(@"%@", [[self class] descriptionOfProgram:[self program]]);
+    self.programStack = nil;
 }
 
 - (void)undo
 {
-    if ([self.programStack count]) [self.programStack removeLastObject];
+    [self.programStack removeLastObject];
+    if (![self.programStack count]) self.programStack = nil;
 }
 
 - (NSString*) description

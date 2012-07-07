@@ -68,7 +68,7 @@
     } else {
         self.display.text = digit;
         if (![digit isEqualToString:@"0"]) self.userIsInTheMiddleOfEnteringANumber = YES;
-        self.programDisplay.text = [self.brain currentProgramDescription];
+        [self updateProgramDisplayWithEquals:NO];
     }
 }
 
@@ -76,7 +76,7 @@
 {
     [self.brain pushOperand:[self.display.text doubleValue]];
     self.userIsInTheMiddleOfEnteringANumber = NO;
-    self.programDisplay.text = [NSString stringWithFormat:@"%@ =", [self.brain currentProgramDescription]];
+    [self updateProgramDisplayWithEquals:YES];
 }
 
 - (IBAction)variableTest0Pressed {
@@ -114,7 +114,7 @@
     NSString *variableName = sender.currentTitle;
     self.display.text = variableName;
     [self.brain pushVariable:variableName];
-    self.programDisplay.text = [self.brain currentProgramDescription];
+    [self updateProgramDisplayWithEquals:NO];
     [self updateVariableDisplay];
 }
 
@@ -124,9 +124,9 @@
         [self enterPressed];
     }
     NSString *operation = sender.currentTitle;
-    double result = [self.brain performOperation:operation usingVariableValues:self.testVariableValues];
-    self.programDisplay.text = [NSString stringWithFormat:@"%@ =", [self.brain currentProgramDescription]];
-    self.display.text = [NSString stringWithFormat:@"%g", result];
+    [self.brain pushOperation:operation];
+    [self updateDisplay];
+    [self updateProgramDisplayWithEquals:YES];
     if ([self.display.text isEqualToString:@"-0"]) self.display.text = @"0"; 
 }
 
@@ -148,7 +148,7 @@
     } else {
         self.display.text = @"0.";
         self.userIsInTheMiddleOfEnteringANumber = YES;
-        self.programDisplay.text = [self.brain currentProgramDescription];
+        [self updateProgramDisplayWithEquals:NO];
     }
 }
 
