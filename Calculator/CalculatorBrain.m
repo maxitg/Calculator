@@ -175,11 +175,22 @@
     NSLog(@"%@", [[self class] descriptionOfProgram:self.program]);
 }
 
-- (double)performOperation:(NSString *)operation
+- (void)pushVariable:(NSString *)variable
+{
+    [self.programStack addObject:variable];
+    NSLog(@"%@", [[self class] descriptionOfProgram:self.program]);
+}
+
+- (double)performOperation:(NSString *)operation usingVariableValues:(NSDictionary *)variableValues
 {
     [self.programStack addObject:operation];
     NSLog(@"%@", [[self class] descriptionOfProgram:self.program]);
-    return [[self class] runProgram:self.program];
+    return [[self class] runProgram:self.program usingVariableValues:variableValues];
+}
+
+- (double)performOperation:(NSString *)operation
+{
+    return [self performOperation:operation usingVariableValues:nil];
 }
 
 + (double)popOperandOffProgramStack:(NSMutableArray *) stack
@@ -245,7 +256,7 @@
 }
 
 + (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
-{
+{    
     NSMutableArray *stack;
     if ([program isKindOfClass:[NSArray class]]) {
         stack = [program mutableCopy];
@@ -268,9 +279,7 @@
 
 + (NSSet *)variablesUsedInProgram:(id)program
 {
-    NSSet* result = [NSSet setWithArray:[program objectsAtIndexes:[self variableIndexesInProgram:program]]];
-    if ([result count] > 0) return result;
-    else return nil;
+    return [NSSet setWithArray:[program objectsAtIndexes:[self variableIndexesInProgram:program]]];
 }
 
 - (void)clear
