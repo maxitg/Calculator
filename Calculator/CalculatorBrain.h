@@ -14,6 +14,7 @@
 - (void)pushVariable:(NSString *)variable;
 - (double)performOperation:(NSString *)operation;
 - (double)performOperation:(NSString *)operation usingVariableValues:(NSDictionary *)variableValues;
+- (void)undo;
 - (void)clear;
 
 - (NSString*)currentProgramDescription;

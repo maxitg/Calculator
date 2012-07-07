@@ -288,6 +288,11 @@
     NSLog(@"%@", [[self class] descriptionOfProgram:[self program]]);
 }
 
+- (void)undo
+{
+    if ([self.programStack count]) [self.programStack removeLastObject];
+}
+
 - (NSString*) description
 {
     return [NSString stringWithFormat:@"stack = %@", self.programStack];

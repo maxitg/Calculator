@@ -32,6 +32,17 @@
     return _brain;
 }
 
+- (void)updateProgramDisplayWithEquals:(BOOL)equals
+{
+    self.programDisplay.text = [[self.brain class] descriptionOfProgram:self.brain.program];
+    if (equals) self.programDisplay.text = [self.programDisplay.text stringByAppendingString:@" ="];
+}
+
+- (void)updateDisplay
+{
+    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
+}
+
 - (void)updateVariableDisplay
 {
     NSSet *variables = [[self.brain class] variablesUsedInProgram:self.brain.program];
@@ -40,6 +51,13 @@
         [displayComponents addObject:[NSString stringWithFormat:@"%@ = %g", variableName, [[self.testVariableValues objectForKey:variableName] doubleValue]]];
     }
     self.variableDisplay.text = [displayComponents componentsJoinedByString:@" "];
+}
+
+- (void)update
+{
+    [self updateDisplay];
+    [self updateProgramDisplayWithEquals:YES];
+    [self updateVariableDisplay];
 }
 
 - (IBAction)digitPressed:(UIButton *)sender
@@ -147,12 +165,12 @@
     if (self.userIsInTheMiddleOfEnteringANumber) {
         self.display.text = [self.display.text substringToIndex:([self.display.text length]-1)];
         if ([self.display.text isEqualToString:@""] || [self.display.text isEqualToString:@"-"]) {
-            self.display.text = @"0";
             self.userIsInTheMiddleOfEnteringANumber = NO;
         }
-    } else {
-        self.display.text = @"0";
-        self.programDisplay.text = [self.brain currentProgramDescription];
+    }
+    if (!self.userIsInTheMiddleOfEnteringANumber) {
+        [self.brain undo];
+        [self update];
     }
 }
 
