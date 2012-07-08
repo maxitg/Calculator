@@ -52,7 +52,7 @@
     for (NSString *variableName in variables) {
         [displayComponents addObject:[NSString stringWithFormat:@"%@ = %g", variableName, [[self.testVariableValues objectForKey:variableName] doubleValue]]];
     }
-    self.variableDisplay.text = [displayComponents componentsJoinedByString:@" "];
+    self.variableDisplay.text = [displayComponents componentsJoinedByString:@"  "];
 }
 
 - (void)update

@@ -62,6 +62,8 @@
 
     //  Program description methods
 
+    //  Yes, it is longer that it should be, but brackets counting is quite complicated thing
+
 + (NSString*)descriptionOfTopOfStack:(NSMutableArray*) stack
 {
     id topOfStack = [stack lastObject];
@@ -227,23 +229,22 @@
 
 - (void)pushVariable:(NSString *)variable
 {
-    [self.programStack addObject:variable];
+    if ([[self class] isVariable:variable]) [self.programStack addObject:variable];
 }
 
 - (void)pushOperation:(NSString *)operation
 {
-    [self.programStack addObject:operation];
+    if ([[self class] isOperation:operation]) [self.programStack addObject:operation];
 }
 
 - (void)clear
 {
-    self.programStack = nil;
+    [self.programStack removeAllObjects];
 }
 
 - (void)undo
 {
-    [self.programStack removeLastObject];
-    if (![self.programStack count]) self.programStack = nil;
+    if ([self.programStack count]) [self.programStack removeLastObject];
 }
 
 - (NSString*) description
