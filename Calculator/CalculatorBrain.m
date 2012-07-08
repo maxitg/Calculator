@@ -27,6 +27,12 @@
     else return NO;
 }
 
++ (BOOL)isVariable:(id)anObject
+{
+    if ([anObject isKindOfClass:[NSString class]] && ![self isOperation:anObject]) return YES;
+    else return NO;
+}
+
 + (int)numberOfObjectOperands:(id) anObject
 {
     NSSet *operationsWith2Operands = [NSSet setWithObjects:@"+", @"*", @"-", @"/", nil];
@@ -175,12 +181,6 @@
 }
 
     //  Variable evaluation methods
-
-+ (BOOL)isVariable:(id)anObject
-{
-    if ([anObject isKindOfClass:[NSString class]] && ![self isOperation:anObject]) return YES;
-    else return NO;
-}
 
 + (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
 {    

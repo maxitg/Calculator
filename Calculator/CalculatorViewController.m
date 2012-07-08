@@ -22,6 +22,7 @@
 @synthesize display = _display;
 @synthesize programDisplay = _history;
 @synthesize variableDisplay = _variableDisplay;
+
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
 @synthesize brain = _brain;
 @synthesize testVariableValues = _testVariableValues;
@@ -32,15 +33,16 @@
     return _brain;
 }
 
+- (void)updateDisplay
+{
+    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
+    if ([self.display.text isEqualToString:@"-0"]) self.display.text = @"0";
+}
+
 - (void)updateProgramDisplayWithEquals:(BOOL)equals
 {
     self.programDisplay.text = [[self.brain class] descriptionOfProgram:self.brain.program];
     if (equals) self.programDisplay.text = [self.programDisplay.text stringByAppendingString:@" ="];
-}
-
-- (void)updateDisplay
-{
-    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
 }
 
 - (void)updateVariableDisplay
@@ -58,6 +60,44 @@
     [self updateDisplay];
     [self updateProgramDisplayWithEquals:YES];
     [self updateVariableDisplay];
+}
+
+- (void)updateVariables
+{
+    if (self.userIsInTheMiddleOfEnteringANumber) {
+        [self updateVariableDisplay];
+    } else {
+        [self updateDisplay];
+        [self updateVariableDisplay];
+    }
+}
+
+- (IBAction)variableTest0Pressed
+{
+    self.testVariableValues = nil;
+    [self updateVariables];
+}
+
+- (IBAction)variableTest1Pressed
+{
+    self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:
+                               [NSNumber numberWithDouble:3.2], @"x",
+                               [NSNumber numberWithDouble:100.6], @"y",
+                               [NSNumber numberWithDouble:-4.2], @"z",
+                               [NSNumber numberWithDouble:0.], @"t",
+                               nil];
+    [self updateVariables];
+}
+
+- (IBAction)variableTest2Pressed
+{
+    self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:
+                               [NSNumber numberWithDouble:3.2E23], @"x",
+                               [NSNumber numberWithDouble:2.1E-23], @"y",
+                               [NSNumber numberWithDouble:-1.2E12], @"z",
+                               [NSNumber numberWithDouble:0.], @"t",
+                               nil];
+    [self updateVariables];
 }
 
 - (IBAction)digitPressed:(UIButton *)sender
@@ -79,55 +119,22 @@
     [self updateProgramDisplayWithEquals:YES];
 }
 
-- (IBAction)variableTest0Pressed {
-    self.testVariableValues = nil;
-    [self updateVariableDisplay];
-    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
-}
-
-- (IBAction)variableTest1Pressed {
-    self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:
-                               [NSNumber numberWithDouble:3.2], @"x",
-                               [NSNumber numberWithDouble:100.6], @"y",
-                               [NSNumber numberWithDouble:-4.2], @"z",
-                               [NSNumber numberWithDouble:0.], @"t",
-                               nil];
-    [self updateVariableDisplay];
-    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
-}
-
-- (IBAction)variableTest2Pressed {
-    self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:
-                               [NSNumber numberWithDouble:3.2E23], @"x",
-                               [NSNumber numberWithDouble:2.1E-23], @"y",
-                               [NSNumber numberWithDouble:-1.2E12], @"z",
-                               [NSNumber numberWithDouble:0.], @"t",
-                               nil];
-    [self updateVariableDisplay];
-    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
-}
-
-- (IBAction)variablePressed:(UIButton *)sender {
-    if (self.userIsInTheMiddleOfEnteringANumber) {
-        [self enterPressed];
-    }
-    NSString *variableName = sender.currentTitle;
-    self.display.text = variableName;
-    [self.brain pushVariable:variableName];
-    [self updateProgramDisplayWithEquals:NO];
-    [self updateVariableDisplay];
-}
-
 - (IBAction)operationPressed:(UIButton *)sender
 {
     if (self.userIsInTheMiddleOfEnteringANumber) {
         [self enterPressed];
     }
-    NSString *operation = sender.currentTitle;
-    [self.brain pushOperation:operation];
-    [self updateDisplay];
-    [self updateProgramDisplayWithEquals:YES];
-    if ([self.display.text isEqualToString:@"-0"]) self.display.text = @"0"; 
+    [self.brain pushOperation:sender.currentTitle];
+    [self update]; 
+}
+
+- (IBAction)variablePressed:(UIButton *)sender
+{
+    if (self.userIsInTheMiddleOfEnteringANumber) {
+        [self enterPressed];
+    }
+    [self.brain pushVariable:sender.currentTitle];
+    [self update];
 }
 
 - (IBAction)plusMinusPressed:(UIButton *)sender {
@@ -152,15 +159,6 @@
     }
 }
 
-- (IBAction)CPressed {
-    [self.brain clear];
-    self.display.text = @"0";
-    self.programDisplay.text = @"";
-    self.variableDisplay.text = @"";
-    self.userIsInTheMiddleOfEnteringANumber = NO;
-    self.testVariableValues = nil;
-}
-
 - (IBAction)backspacePressed {
     if (self.userIsInTheMiddleOfEnteringANumber) {
         self.display.text = [self.display.text substringToIndex:([self.display.text length]-1)];
@@ -172,6 +170,13 @@
         [self.brain undo];
         [self update];
     }
+}
+
+- (IBAction)CPressed {
+    [self.brain clear];
+    self.userIsInTheMiddleOfEnteringANumber = NO;
+    self.testVariableValues = nil;
+    [self update];
 }
 
 - (void)viewDidUnload {
