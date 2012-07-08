@@ -35,7 +35,10 @@
 
 - (void)updateDisplay
 {
-    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
+    id programResult = [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues];
+    if ([programResult isKindOfClass:[NSNumber class]]) self.display.text = [NSString stringWithFormat:@"%g", [programResult doubleValue]];
+    else if ([programResult isKindOfClass:[NSString class]]) self.display.text = programResult;
+    else self.display.text = @"0";  //  it is a case of empty program
     if ([self.display.text isEqualToString:@"-0"]) self.display.text = @"0";
 }
 
@@ -104,11 +107,13 @@
 {
     NSString *digit = [sender currentTitle];
     if (self.userIsInTheMiddleOfEnteringANumber) {
-        self.display.text = [self.display.text stringByAppendingString:digit];
+        if ([self.display.text isEqualToString:@"0"]) self.display.text = digit;
+        else if ([self.display.text isEqualToString:@"-0"]) self.display.text = [NSString stringWithFormat:@"-%@", digit];
+        else self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
         self.display.text = digit;
-        if (![digit isEqualToString:@"0"]) self.userIsInTheMiddleOfEnteringANumber = YES;
         [self updateProgramDisplayWithEquals:NO];
+        self.userIsInTheMiddleOfEnteringANumber = YES;
     }
 }
 
@@ -124,6 +129,7 @@
     if (self.userIsInTheMiddleOfEnteringANumber) {
         [self enterPressed];
     }
+    if (![self.brain.program count] && ![sender.currentTitle isEqualToString:@"π"]) [self enterPressed];   //  to avoid sqrt(?) at the start
     [self.brain pushOperation:sender.currentTitle];
     [self update]; 
 }
