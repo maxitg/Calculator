@@ -181,7 +181,6 @@
 - (IBAction)CPressed {
     [self.brain clear];
     self.userIsInTheMiddleOfEnteringANumber = NO;
-    self.testVariableValues = nil;
     [self update];
 }
 
