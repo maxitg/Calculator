@@ -222,7 +222,7 @@
             [result addObject:[program objectAtIndex:i]];
         }
     }
-    return [result copy];
+    return [result count] ? [result copy] : nil;
 }
 
     //  Instance methods

@@ -78,6 +78,10 @@
 - (IBAction)variableTest0Pressed
 {
     self.testVariableValues = nil;
+    NSMutableSet* vSet;
+    vSet = [[NSMutableSet alloc] init];
+    NSSet* nSet;
+    nSet = [vSet copy];
     [self updateVariables];
 }
 
