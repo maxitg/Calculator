@@ -78,10 +78,6 @@
 - (IBAction)variableTest0Pressed
 {
     self.testVariableValues = nil;
-    NSMutableSet* vSet;
-    vSet = [[NSMutableSet alloc] init];
-    NSSet* nSet;
-    nSet = [vSet copy];
     [self updateVariables];
 }
 
@@ -149,7 +145,9 @@
 
 - (IBAction)plusMinusPressed:(UIButton *)sender {
     if (self.userIsInTheMiddleOfEnteringANumber) {
-        self.display.text = [NSString stringWithFormat:@"%g", -self.display.text.doubleValue];
+        if ([self.display.text isEqualToString:@"0"]) return;
+        if ([self.display.text characterAtIndex:0] == '-') self.display.text = [self.display.text substringFromIndex:1];
+        else self.display.text = [@"-" stringByAppendingString:self.display.text];
     } else {
         [self operationPressed:sender];
     }
