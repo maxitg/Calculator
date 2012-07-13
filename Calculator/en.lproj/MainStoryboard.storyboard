@@ -322,7 +322,7 @@
                                     <action selector="dotPressed" destination="2" eventType="touchUpInside" id="LSy-Ba-nbY"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="2 * (2 + 2) / 3 =" textAlignment="right" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="OVJ-U8-qgU">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="right" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="OVJ-U8-qgU">
                                 <rect key="frame" x="20" y="8" width="280" height="24"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -390,6 +390,21 @@
                                     <action selector="variablePressed:" destination="2" eventType="touchUpInside" id="aVf-lF-efc"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7ce-kE-T7u">
+                                <rect key="frame" x="92" y="92" width="136" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Graph">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="MLU-lQ-IHa" kind="push" identifier="ShowGraph" id="MOE-Yo-do4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -400,7 +415,32 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="679" y="31"/>
+            <point key="canvasLocation" x="643" y="31"/>
+        </scene>
+        <!--Graph View Controller - Graph-->
+        <scene sceneID="A1q-V1-nJa">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="m8d-E8-oEx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="MLU-lQ-IHa" customClass="GraphViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Uax-tU-twM">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="tGU-hy-v2Z" customClass="GraphView">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Graph" id="kd5-wT-1C8"/>
+                    <connections>
+                        <outlet property="graphDisplay" destination="tGU-hy-v2Z" id="5gM-fr-6aK"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1147" y="31"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="eh9-E2-3Sz">
@@ -428,6 +468,15 @@
                 <relationship kind="outlet" name="display" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="programDisplay" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="variableDisplay" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="GraphView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GraphView.h"/>
+        </class>
+        <class className="GraphViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GraphViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="graphDisplay" candidateClass="GraphView"/>
             </relationships>
         </class>
     </classes>
