@@ -43,7 +43,17 @@
 
 - (void)drawRect:(CGRect)rect
 {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+//    CGContextMoveToPoint(context, -1., 0.);
     
+    for (CGFloat currentPointX = -1.; currentPointX < self.bounds.size.width + 1.; currentPointX += 1./self.contentScaleFactor) {
+        float x = (currentPointX - self.bounds.size.width/2.)/(self.bounds.size.width/2.)*self.scale - self.origin.x;
+        float y = [self.dataSource functionValueForX:x];
+        CGFloat currentPointY = -(y + self.origin.y)/self.scale*(self.bounds.size.width/2.) + self.bounds.size.height/2.;
+//        CGContextAddLineToPoint(context, currentPointX, currentPointY);
+        CGContextAddRect(context, CGRectMake(currentPointX, currentPointY, 1./self.contentScaleFactor, 1./self.contentScaleFactor));
+    }
+    CGContextStrokePath(context);
 }
 
 @end
