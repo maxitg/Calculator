@@ -50,6 +50,26 @@
     }
 }
 
+- (void)pan:(UIPanGestureRecognizer*)gesture
+{
+    if ((gesture.state == UIGestureRecognizerStateChanged) || (gesture.state == UIGestureRecognizerStateEnded)) {
+        CGPoint newOrigin;
+        newOrigin.x = self.origin.x + [gesture translationInView:self].x/(self.bounds.size.width/2)/self.scale;
+        newOrigin.y = self.origin.y - [gesture translationInView:self].y/(self.bounds.size.width/2)/self.scale;
+        self.origin = newOrigin;
+        [gesture setTranslation:CGPointZero inView:self];
+    }
+}
+
+- (void)tripleTap:(UITapGestureRecognizer*)gesture
+{
+    CGPoint newOrigin;
+    newOrigin.x = -([gesture locationInView:self].x - self.bounds.size.width/2.)/(self.bounds.size.width/2.)/self.scale + self.origin.x;
+    newOrigin.y = +([gesture locationInView:self].y - self.bounds.size.height/2.)/(self.bounds.size.width/2.)/self.scale + self.origin.y;
+    NSLog(@"New Origin location: (%f %f)", newOrigin.x, newOrigin.y);
+    self.origin = newOrigin;
+}
+
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();

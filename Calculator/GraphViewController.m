@@ -28,7 +28,15 @@
 - (void)setGraphDisplay:(GraphView *)graphDisplay
 {
     _graphDisplay = graphDisplay;
+    
     [graphDisplay addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:graphDisplay action:@selector(pinch:)]];
+    
+    [graphDisplay addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:graphDisplay action:@selector(pan:)]];
+    
+    UITapGestureRecognizer *tripleTapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:graphDisplay action:@selector(tripleTap:)];
+    tripleTapRecognizer.numberOfTapsRequired = 3;
+    [graphDisplay addGestureRecognizer:tripleTapRecognizer];
+    
     self.graphDisplay.dataSource = self;
 }
 
