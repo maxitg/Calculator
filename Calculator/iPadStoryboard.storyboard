@@ -401,6 +401,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="graphPressed" destination="I0S-Rf-rIi" eventType="touchUpInside" id="iek-om-oPa"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bNe-cQ-jr5">
                                 <rect key="frame" x="20" y="304" width="64" height="52"/>
@@ -468,9 +471,19 @@
                     <view key="view" contentMode="scaleToFill" id="Lv4-Ob-53I">
                         <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="Xvz-0f-gLe" customClass="GraphView">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1004"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
+                    <connections>
+                        <outlet property="graphDisplay" destination="Xvz-0f-gLe" id="eYK-1Y-zQf"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="68" y="-103"/>

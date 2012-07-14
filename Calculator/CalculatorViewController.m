@@ -125,6 +125,11 @@
     }
 }
 
+- (IBAction)graphPressed {
+    GraphViewController* graphViewController = [[[self splitViewController] viewControllers] objectAtIndex:1];
+    graphViewController.program = self.brain.program;
+}
+
 - (IBAction)enterPressed
 {
     [self.brain pushOperand:[self.display.text doubleValue]];

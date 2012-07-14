@@ -44,6 +44,7 @@
 {
     _program = program;
     self.title = [CalculatorBrain descriptionOfProgram:program];
+    [self.graphDisplay setNeedsDisplay];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
