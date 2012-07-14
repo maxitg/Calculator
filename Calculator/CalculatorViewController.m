@@ -194,6 +194,11 @@
     [self update];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
 - (void)viewDidUnload {
     [self setDisplay:nil];
     [self setProgramDisplay:nil];

@@ -46,6 +46,11 @@
     self.title = [CalculatorBrain descriptionOfProgram:program];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
 - (void)viewDidUnload {
     [self setGraphDisplay:nil];
     [super viewDidUnload];
