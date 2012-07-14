@@ -7,6 +7,7 @@
 //
 
 #import "GraphView.h"
+#import "AxesDrawer.h"
 
 @implementation GraphView
 
@@ -53,6 +54,8 @@
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
 //    CGContextMoveToPoint(context, -1., 0.);
+    
+    [AxesDrawer drawAxesInRect:rect originAtPoint:CGPointMake((0. + self.origin.x)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.width/2., -(0. + self.origin.y)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.height/2.) scale:self.bounds.size.width/2.*self.scale];
     
     for (CGFloat currentPointX = -1.; currentPointX < self.bounds.size.width + 1.; currentPointX += 1./self.contentScaleFactor) {
         float x = (currentPointX - self.bounds.size.width/2.)/(self.bounds.size.width/2.)/self.scale - self.origin.x;

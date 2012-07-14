@@ -18,6 +18,7 @@
 		69098CEF159D9BB4001B6249 /* CalculatorBrain.m in Sources */ = {isa = PBXBuildFile; fileRef = 69098CEE159D9BB4001B6249 /* CalculatorBrain.m */; };
 		690BD7BC15B0153800D1F682 /* GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 690BD7BB15B0153800D1F682 /* GraphView.m */; };
 		690BD7BF15B0158400D1F682 /* GraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690BD7BE15B0158400D1F682 /* GraphViewController.m */; };
+		69D4B4FC15B1D3D7005675FC /* AxesDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D4B4FB15B1D3D7005675FC /* AxesDrawer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,8 @@
 		690BD7BB15B0153800D1F682 /* GraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphView.m; sourceTree = "<group>"; };
 		690BD7BD15B0158300D1F682 /* GraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphViewController.h; sourceTree = "<group>"; };
 		690BD7BE15B0158400D1F682 /* GraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphViewController.m; sourceTree = "<group>"; };
+		69D4B4FA15B1D3D7005675FC /* AxesDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AxesDrawer.h; sourceTree = "<group>"; };
+		69D4B4FB15B1D3D7005675FC /* AxesDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AxesDrawer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +94,8 @@
 				690BD7BD15B0158300D1F682 /* GraphViewController.h */,
 				690BD7BE15B0158400D1F682 /* GraphViewController.m */,
 				69098CE2159D7ED0001B6249 /* MainStoryboard.storyboard */,
+				69D4B4FA15B1D3D7005675FC /* AxesDrawer.h */,
+				69D4B4FB15B1D3D7005675FC /* AxesDrawer.m */,
 				690BD7BA15B0153800D1F682 /* GraphView.h */,
 				690BD7BB15B0153800D1F682 /* GraphView.m */,
 				69098CED159D9BB4001B6249 /* CalculatorBrain.h */,
@@ -182,6 +187,7 @@
 				69098CEF159D9BB4001B6249 /* CalculatorBrain.m in Sources */,
 				690BD7BC15B0153800D1F682 /* GraphView.m in Sources */,
 				690BD7BF15B0158400D1F682 /* GraphViewController.m in Sources */,
+				69D4B4FC15B1D3D7005675FC /* AxesDrawer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
