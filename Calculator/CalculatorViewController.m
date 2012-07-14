@@ -137,9 +137,9 @@
     if (self.userIsInTheMiddleOfEnteringANumber) {
         [self enterPressed];
     }
-    if (![self.brain.program count] && ![sender.currentTitle isEqualToString:@"π"]) [self enterPressed];   //  to avoid sqrt(?) at the start
+    if (![self.brain.program count] && ![sender.currentTitle isEqualToString:@"π"] && ![sender.currentTitle isEqualToString:@"e"]) [self enterPressed];   //  to avoid sqrt(?) at the start
     [self.brain pushOperation:sender.currentTitle];
-    [self update]; 
+    [self update];
 }
 
 - (IBAction)variablePressed:(UIButton *)sender

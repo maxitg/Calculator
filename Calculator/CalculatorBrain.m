@@ -22,7 +22,7 @@
 
 + (BOOL)isOperation:(id) anObject
 {
-    NSSet *operations = [NSSet setWithObjects:@"+", @"*", @"-", @"/", @"sin", @"cos", @"sqrt", @"π", @"+ / -", nil];
+    NSSet *operations = [NSSet setWithObjects:@"+", @"*", @"-", @"/", @"^", @"sin", @"cos", @"sqrt", @"ln", @"π", @"e", @"+ / -", nil];
     if ([operations containsObject:anObject]) return YES;
     else return NO;
 }
@@ -35,8 +35,8 @@
 
 + (int)numberOfObjectOperands:(id) anObject
 {
-    NSSet *operationsWith2Operands = [NSSet setWithObjects:@"+", @"*", @"-", @"/", nil];
-    NSSet *operationsWith1Operand = [NSSet setWithObjects:@"sin", @"cos", @"sqrt", @"+ / -", nil];
+    NSSet *operationsWith2Operands = [NSSet setWithObjects:@"+", @"*", @"-", @"/", @"^", nil];
+    NSSet *operationsWith1Operand = [NSSet setWithObjects:@"sin", @"cos", @"sqrt", @"ln", @"+ / -", nil];
     
     if ([operationsWith2Operands containsObject:anObject]) return 2;
     else if ([operationsWith1Operand containsObject:anObject]) return 1;
@@ -45,12 +45,14 @@
 
 + (int)objectPrecedence:(id) anObject
 {
-    NSSet *operationsWithPrecedence2 = [NSSet setWithObjects:@"+", @"-", @"+ / -", nil];
-    NSSet *operationsWithPrecedence1 = [NSSet setWithObjects:@"*", @"/", nil];
+    NSSet *operationsWithPrecedence3 = [NSSet setWithObjects:@"+", @"-", @"+ / -", nil];
+    NSSet *operationsWithPrecedence2 = [NSSet setWithObjects:@"*", @"/", nil];
+    NSSet *operationsWithPrecedence1 = [NSSet setWithObject:@"^"];
     
-    if ([operationsWithPrecedence2 containsObject:anObject]) return 2;
+    if ([operationsWithPrecedence3 containsObject:anObject]) return 3;
+    else if ([operationsWithPrecedence2 containsObject:anObject]) return 2;
     else if ([operationsWithPrecedence1 containsObject:anObject]) return 1;
-    else if ([anObject isKindOfClass:[NSNumber class]]) return [anObject doubleValue] >= 0 ? 0 : 2;
+    else if ([anObject isKindOfClass:[NSNumber class]]) return [anObject doubleValue] >= 0 ? 0 : 3;
     else return 0;
 }
 
@@ -77,7 +79,7 @@
         } else if ([topOfStack isEqualToString:@"+ / -"]) {
             int operandPrecedence = [self objectPrecedence:[stack lastObject]];
             NSString *operand = [self descriptionOfTopOfStack:stack];
-            return operandPrecedence >= 1 ? [NSString stringWithFormat:@"-(%@)", operand] : [NSString stringWithFormat:@"-%@", operand];
+            return operandPrecedence >= 2 ? [NSString stringWithFormat:@"-(%@)", operand] : [NSString stringWithFormat:@"-%@", operand];
         
         } else if ([self numberOfObjectOperands:topOfStack] == 1) {
             return [NSString stringWithFormat:@"%@(%@)", topOfStack, [self descriptionOfTopOfStack:stack]];
@@ -94,7 +96,7 @@
                 firstOperand = [NSString stringWithFormat:@"(%@)", firstOperand];
             }
             
-            if (secondOperandPrecedence == 2 && numberOfSecondObjectOperands < 2) {   //  "-obj" case
+            if (secondOperandPrecedence == 3 && numberOfSecondObjectOperands < 2) {   //  "-obj" case
                 secondOperand = [NSString stringWithFormat:@"(%@)", secondOperand];
             } else if ([self operationIsCommutative:topOfStack]) {
                 if (secondOperandPrecedence > [self objectPrecedence:topOfStack]) {  //  example: 4 * (2 + 3) [but not 4 * 2 * 4]
@@ -166,6 +168,12 @@
             } else if ([topOfStack isEqualToString:@"/"]) {
                 if ([secondOperand doubleValue]) return [NSNumber numberWithDouble:[firstOperand doubleValue] / [secondOperand doubleValue]];
                 else return @"Divide by zero";
+            
+            } else if ([topOfStack isEqualToString:@"^"]) {
+                if ([firstOperand doubleValue] < 0 && round([secondOperand doubleValue]) != [secondOperand doubleValue]) return @"Non-int power of a negative number";
+                else if ([firstOperand doubleValue] == 0 && [secondOperand doubleValue] < 0) return @"Divide by zero";
+                else if ([firstOperand doubleValue] == 0 && [secondOperand doubleValue] == 0) return @"0^0 is undefined";
+                else return [NSNumber numberWithDouble:pow([firstOperand doubleValue], [secondOperand doubleValue])];
             }
         
         } else if ([self numberOfObjectOperands:topOfStack] == 1) {
@@ -183,6 +191,10 @@
                 if ([operand doubleValue] >= 0) return [NSNumber numberWithDouble:sqrt([operand doubleValue])];
                 else return @"Square root of a negative number";
             
+            } else if ([topOfStack isEqualToString:@"ln"]) {
+                if ([operand doubleValue] >= 0) return [NSNumber numberWithDouble:log([operand doubleValue])];
+                else return @"Logarithm of a negative number";
+                
             } else if ([topOfStack isEqualToString:@"+ / -"]) {
                 return [NSNumber numberWithDouble:-[operand doubleValue]];
             }
@@ -190,6 +202,9 @@
         } else {
             if ([topOfStack isEqualToString:@"π"]) {
                 return [NSNumber numberWithDouble:M_PI];
+            
+            } else if ([topOfStack isEqualToString:@"e"]) {
+                return [NSNumber numberWithDouble:M_E];
             }
         }
     }
