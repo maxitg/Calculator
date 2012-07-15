@@ -201,7 +201,10 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    return YES;
+    NSLog(@"%@", [[UIDevice currentDevice] model]);
+    if ([[[UIDevice currentDevice] model] isEqualToString:@"iPad"]) return YES;
+    else if (toInterfaceOrientation == UIInterfaceOrientationPortrait) return YES;
+    else return NO;
 }
 
 - (void)viewDidUnload {
