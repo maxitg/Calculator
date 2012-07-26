@@ -9,7 +9,7 @@
 #import "GraphViewController.h"
 #import "CalculatorBrain.h"
 
-@interface GraphViewController () <GraphViewDataSource>
+@interface GraphViewController () <GraphViewDataSource, UISplitViewControllerDelegate>
 
 @end
 
@@ -54,6 +54,27 @@
     self.title = [CalculatorBrain descriptionOfProgram:program];
     self.programDisplay.title = [CalculatorBrain descriptionOfProgram:program];
     [self.graphDisplay setNeedsDisplay];
+}
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    self.splitViewController.delegate = self;
+}
+
+- (void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc
+{
+    barButtonItem.title = @"Calculator";
+    NSMutableArray* toolbarItems = [self.toolbar.items mutableCopy];
+    [toolbarItems insertObject:barButtonItem atIndex:0];
+    self.toolbar.items = toolbarItems;
+}
+
+- (void)splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    NSMutableArray* toolbarItems = [self.toolbar.items mutableCopy];
+    [toolbarItems removeObjectAtIndex:0];
+    self.toolbar.items = toolbarItems;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation

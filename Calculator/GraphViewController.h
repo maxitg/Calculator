@@ -14,5 +14,6 @@
 @property (strong, nonatomic) id program;
 @property (weak, nonatomic) IBOutlet GraphView *graphDisplay;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *programDisplay;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 
 @end
