@@ -17,6 +17,7 @@
 
 @synthesize program = _program;
 @synthesize graphDisplay = _graphDisplay;
+@synthesize programDisplay = _programDisplay;
 
 - (float)functionValueForX:(float)x
 {
@@ -44,6 +45,7 @@
 {
     _program = program;
     self.title = [CalculatorBrain descriptionOfProgram:program];
+    self.programDisplay.text = [CalculatorBrain descriptionOfProgram:program];
     [self.graphDisplay setNeedsDisplay];
 }
 
@@ -54,6 +56,7 @@
 
 - (void)viewDidUnload {
     [self setGraphDisplay:nil];
+    [self setProgramDisplay:nil];
     [super viewDidUnload];
 }
 

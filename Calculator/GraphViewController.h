@@ -13,5 +13,6 @@
 
 @property (strong, nonatomic) id program;
 @property (weak, nonatomic) IBOutlet GraphView *graphDisplay;
+@property (weak, nonatomic) IBOutlet UILabel *programDisplay;
 
 @end
