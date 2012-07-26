@@ -201,7 +201,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    if ([[[UIDevice currentDevice] model] isEqualToString:@"iPad"] || [[[UIDevice currentDevice] model] isEqualToString:@"iPad Simulator"]) return YES;
+    if (self.splitViewController) return YES;
     else if (toInterfaceOrientation == UIInterfaceOrientationPortrait) return YES;
     else return NO;
 }
