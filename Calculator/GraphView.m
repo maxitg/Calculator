@@ -30,6 +30,9 @@
 {
     if (scale != _scale) {
         _scale = scale;
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+        [userDefaults setFloat:scale forKey:@"scale"];
+        [userDefaults synchronize];
         [self setNeedsDisplay];
     }
 }
@@ -38,6 +41,10 @@
 {
     if (origin.x != _origin.x || origin.y != _origin.y) {
         _origin = origin;
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+        [userDefaults setFloat:origin.x forKey:@"origin.x"];
+        [userDefaults setFloat:origin.y forKey:@"origin.y"];
+        [userDefaults synchronize];
         [self setNeedsDisplay];
     }
 }
@@ -72,7 +79,6 @@
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextMoveToPoint(context, -1., 0.);
     
     [AxesDrawer drawAxesInRect:rect originAtPoint:CGPointMake((0. + self.origin.x)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.width/2., -(0. + self.origin.y)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.height/2.) scale:self.bounds.size.width/2.*self.scale];
     
@@ -80,7 +86,9 @@
         float x = (currentPointX - self.bounds.size.width/2.)/(self.bounds.size.width/2.)/self.scale - self.origin.x;
         float y = [self.dataSource functionValueForX:x];
         CGFloat currentPointY = -(y + self.origin.y)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.height/2.;
-//        CGContextAddLineToPoint(context, currentPointX, currentPointY);
+        
+            //  Drawing with point sized rects
+        
         CGContextAddRect(context, CGRectMake(currentPointX, currentPointY, 1./self.contentScaleFactor, 1./self.contentScaleFactor));
     }
     CGContextStrokePath(context);

@@ -38,6 +38,13 @@
     tripleTapRecognizer.numberOfTapsRequired = 3;
     [graphDisplay addGestureRecognizer:tripleTapRecognizer];
     
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    graphDisplay.scale = [userDefaults floatForKey:@"scale"];
+    CGPoint defaultOrigin;
+    defaultOrigin.x = [userDefaults floatForKey:@"origin.x"];
+    defaultOrigin.y = [userDefaults floatForKey:@"origin.y"];
+    graphDisplay.origin = defaultOrigin;
+    
     self.graphDisplay.dataSource = self;
 }
 
