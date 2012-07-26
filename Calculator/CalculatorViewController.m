@@ -201,8 +201,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    NSLog(@"%@", [[UIDevice currentDevice] model]);
-    if ([[[UIDevice currentDevice] model] isEqualToString:@"iPad"]) return YES;
+    if ([[[UIDevice currentDevice] model] isEqualToString:@"iPad"] || [[[UIDevice currentDevice] model] isEqualToString:@"iPad Simulator"]) return YES;
     else if (toInterfaceOrientation == UIInterfaceOrientationPortrait) return YES;
     else return NO;
 }

@@ -73,7 +73,7 @@
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGContextMoveToPoint(context, -1., 0.);
+    CGContextMoveToPoint(context, -1., 0.);
     
     [AxesDrawer drawAxesInRect:rect originAtPoint:CGPointMake((0. + self.origin.x)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.width/2., -(0. + self.origin.y)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.height/2.) scale:self.bounds.size.width/2.*self.scale];
     
