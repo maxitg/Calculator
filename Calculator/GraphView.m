@@ -20,7 +20,7 @@
 - (CGFloat)scale
 {
     if (!_scale) {
-        return DEFAULT_SCALE;
+        return self.bounds.size.width/2.1;
     } else {
         return _scale;
     }
@@ -61,8 +61,8 @@
 {
     if ((gesture.state == UIGestureRecognizerStateChanged) || (gesture.state == UIGestureRecognizerStateEnded)) {
         CGPoint newOrigin;
-        newOrigin.x = self.origin.x + [gesture translationInView:self].x/(self.bounds.size.width/2)/self.scale;
-        newOrigin.y = self.origin.y - [gesture translationInView:self].y/(self.bounds.size.width/2)/self.scale;
+        newOrigin.x = self.origin.x + [gesture translationInView:self].x/self.scale;
+        newOrigin.y = self.origin.y - [gesture translationInView:self].y/self.scale;
         self.origin = newOrigin;
         [gesture setTranslation:CGPointZero inView:self];
     }
@@ -71,8 +71,8 @@
 - (void)tripleTap:(UITapGestureRecognizer*)gesture
 {
     CGPoint newOrigin;
-    newOrigin.x = -([gesture locationInView:self].x - self.bounds.size.width/2.)/(self.bounds.size.width/2.)/self.scale + self.origin.x;
-    newOrigin.y = +([gesture locationInView:self].y - self.bounds.size.height/2.)/(self.bounds.size.width/2.)/self.scale + self.origin.y;
+    newOrigin.x = -([gesture locationInView:self].x - self.bounds.size.width/2.)/self.scale + self.origin.x;
+    newOrigin.y = +([gesture locationInView:self].y - self.bounds.size.height/2.)/self.scale + self.origin.y;
     self.origin = newOrigin;
 }
 
@@ -80,12 +80,12 @@
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    [AxesDrawer drawAxesInRect:rect originAtPoint:CGPointMake((0. + self.origin.x)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.width/2., -(0. + self.origin.y)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.height/2.) scale:self.bounds.size.width/2.*self.scale];
+    [AxesDrawer drawAxesInRect:rect originAtPoint:CGPointMake((0. + self.origin.x)*self.scale + self.bounds.size.width/2., -(0. + self.origin.y)*self.scale + self.bounds.size.height/2.) scale:self.scale];
     
     for (CGFloat currentPointX = -1.; currentPointX < self.bounds.size.width + 1.; currentPointX += 1./self.contentScaleFactor) {
-        float x = (currentPointX - self.bounds.size.width/2.)/(self.bounds.size.width/2.)/self.scale - self.origin.x;
+        float x = (currentPointX - self.bounds.size.width/2.)/self.scale - self.origin.x;
         float y = [self.dataSource functionValueForX:x];
-        CGFloat currentPointY = -(y + self.origin.y)*self.scale*(self.bounds.size.width/2.) + self.bounds.size.height/2.;
+        CGFloat currentPointY = -(y + self.origin.y)*self.scale + self.bounds.size.height/2.;
         
             //  Drawing with point sized rects
         
