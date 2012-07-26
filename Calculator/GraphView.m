@@ -66,7 +66,6 @@
     CGPoint newOrigin;
     newOrigin.x = -([gesture locationInView:self].x - self.bounds.size.width/2.)/(self.bounds.size.width/2.)/self.scale + self.origin.x;
     newOrigin.y = +([gesture locationInView:self].y - self.bounds.size.height/2.)/(self.bounds.size.width/2.)/self.scale + self.origin.y;
-    NSLog(@"New Origin location: (%f %f)", newOrigin.x, newOrigin.y);
     self.origin = newOrigin;
 }
 
