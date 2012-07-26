@@ -52,7 +52,7 @@
 {
     _program = program;
     self.title = [CalculatorBrain descriptionOfProgram:program];
-    self.programDisplay.text = [CalculatorBrain descriptionOfProgram:program];
+    self.programDisplay.title = [CalculatorBrain descriptionOfProgram:program];
     [self.graphDisplay setNeedsDisplay];
 }
 
